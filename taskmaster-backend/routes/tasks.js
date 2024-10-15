@@ -83,6 +83,65 @@ router.get('/:userId', verifyToken, async (req, res) => {
   }
 });
 
-// Otras rutas (actualizar, eliminar) se agregarían aquí.
+// Actualizar una tarea
+router.put('/:taskId', verifyToken, async (req, res) => {
+  const { taskId } = req.params;
+  const { title, description, dueDate, priority, status, newInvitedUsers } = req.body;
+  const ownerId = req.user.id; // ID del usuario que realiza la solicitud
+
+  try {
+    // Verificar que la tarea exista y que el usuario sea el propietario
+    const task = await Task.findOne({ where: { id: taskId, ownerId: ownerId } });
+
+    if (!task) {
+      return res.status(404).json({ error: 'Tarea no encontrada o no tienes permisos para actualizarla' });
+    }
+
+    // Actualizar la tarea con los nuevos datos
+    await task.update({ title, description, dueDate, priority, status });
+
+    // Si hay nuevos usuarios invitados, asociarlos a la tarea
+    if (newInvitedUsers && newInvitedUsers.length > 0) {
+      const usersToInvite = await User.findAll({
+        where: {
+          id: newInvitedUsers // Buscamos los usuarios por sus IDs
+        }
+      });
+
+      // Agregar nuevos usuarios invitados a la tarea
+      await task.addInvitedUsers(usersToInvite);
+      console.log('Nuevos invitados añadidos:', usersToInvite);
+    }
+
+    res.json({ message: 'Tarea actualizada exitosamente', task });
+  } catch (error) {
+    console.error('Error al actualizar la tarea:', error);
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Eliminar una tarea
+router.delete('/:taskId', verifyToken, async (req, res) => {
+  const { taskId } = req.params;
+  const ownerId = req.user.id; // ID del usuario autenticado
+
+  try {
+    // Verificar que la tarea exista y que el usuario sea el propietario
+    const task = await Task.findOne({ where: { id: taskId, ownerId: ownerId } });
+
+    if (!task) {
+      return res.status(404).json({ error: 'Tarea no encontrada o no tienes permisos para eliminarla' });
+    }
+
+    // Eliminar la tarea
+    await task.destroy();
+
+    res.json({ message: 'Tarea eliminada exitosamente' });
+  } catch (error) {
+    console.error('Error al eliminar la tarea:', error);
+    res.status(400).json({ error: error.message });
+  }
+});
+
 
 module.exports = router;
