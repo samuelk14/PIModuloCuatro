@@ -35,7 +35,8 @@ router.put("/profile", verifyToken, async (req, res) => {
   }
 
   const userId = req.user.id; // ID del usuario autenticado
-  const { name, email, newPassword, confirmPassword } = req.body; // Datos del perfil a actualizar
+  const { name, email, currentPassword, newPassword, confirmPassword } =
+    req.body; // Datos del perfil a actualizar
 
   try {
     // Buscar al usuario por su ID
@@ -50,7 +51,15 @@ router.put("/profile", verifyToken, async (req, res) => {
     user.email = email || user.email;
 
     // Verificar si se quiere cambiar la contraseña
-    if (newPassword) {
+    if (currentPassword && newPassword) {
+      // Verificar que la contraseña actual sea correcta
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res
+          .status(400)
+          .json({ error: "La contraseña actual es incorrecta" });
+      }
+
       // Verificar que newPassword y confirmPassword coincidan
       if (newPassword !== confirmPassword) {
         return res.status(400).json({ error: "Las contraseñas no coinciden" });
