@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const sequelize = require('./config/database');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
@@ -9,6 +10,7 @@ const { Task, User } = require('./models/associations'); // Importar las asociac
 dotenv.config();
 
 const app = express();
+app.use(cors());
 app.use(express.json()); // Parsear JSON en las solicitudes
 
 // Rutas de la API
@@ -34,9 +36,3 @@ if (process.env.NODE_ENV !== 'test') { // Para evitar que se ejecute en el entor
 
 // Exportar tanto la app como el servidor para las pruebas
 module.exports = { app, server, sequelize };
-
-
-// Sincronizar los modelos con la base de datos
-// sequelize.sync({ force: false }) //cambiar a false para la implementacion 
-//   .then(() => app.listen(5000, () => console.log('Servidor en ejecución en el puerto 5000')))
-//   .catch((error) => console.error('Error al sincronizar la base de datos:', error));
