@@ -9,7 +9,9 @@ const { Task, User } = require('./models/associations'); // Importar las asociac
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+app.use(express.json()); // Parsear JSON en las solicitudes
+
+// Rutas de la API
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/user', userRoutes); 
@@ -19,8 +21,9 @@ const PORT = process.env.PORT || 5000;
 
 let server;
 
+// Solo iniciar el servidor en entornos que no sean de prueba
 if (process.env.NODE_ENV !== 'test') { // Para evitar que se ejecute en el entorno de pruebas
-    sequelize.sync({ force: false })
+    sequelize.sync({ force: false }) // Sincronizar los modelos con la base de datos
     .then(() => {
       server = app.listen(PORT, () => {
         console.log(`Servidor en ejecución en el puerto ${PORT}`);

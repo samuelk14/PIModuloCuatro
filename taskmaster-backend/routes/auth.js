@@ -6,16 +6,29 @@ const User = require('../models/User');
 const router = express.Router();
 const crypto = require('crypto'); // Para generar tokens aleatorios
 const nodemailer = require('nodemailer'); // Para enviar correos electrónicos
-const { forgotPasswordSchema, resetPasswordSchema } = require('../middleware/validations'); //Para validaciones de contraseña
+const { registerSchema, forgotPasswordSchema, resetPasswordSchema } = require('../middleware/validations'); //Para validaciones de contraseña
 
 // Registro de usuario
 router.post('/register', async (req, res) => {
+  // Validar los datos de entrada usando Joi
+  const { error } = registerSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+
   const { name, email, password } = req.body;
+
   try {
+    // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Crear el nuevo usuario
     const newUser = await User.create({ name, email, password: hashedPassword });
+    
+    // Responder con éxito
     res.status(201).json({ message: 'Usuario registrado exitosamente', userId: newUser.id });
   } catch (error) {
+    // Manejo de errores
     res.status(400).json({ error: error.message });
   }
 });
