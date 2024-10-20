@@ -17,6 +17,7 @@ router.post('/register', async (req, res) => {
   }
 
   const { name, email, password } = req.body;
+  const { taskId } = req.query; // Obtener el taskId desde los parámetros de la URL
 
   try {
     // Hashear la contraseña
@@ -25,6 +26,14 @@ router.post('/register', async (req, res) => {
     // Crear el nuevo usuario
     const newUser = await User.create({ name, email, password: hashedPassword });
     
+    // Si el usuario fue invitado a una tarea (taskId existe en la URL)
+    if (taskId) {
+      const task = await Task.findByPk(taskId); // Buscar la tarea
+      if (task) {
+        await task.addInvitedUsers([newUser.id]); // Asociar la tarea al nuevo usuario
+      }
+    }
+
     // Responder con éxito
     res.status(201).json({ message: 'Usuario registrado exitosamente', userId: newUser.id });
   } catch (error) {

@@ -23,8 +23,10 @@ const TaskForm = ({ onSubmit }) => {
     setFormData({
       title: '',
       description: '',
+      dueDate: '',
       priority: 'media',
       status: 'pendiente',
+      invitedEmail: ''
     });
   };
 

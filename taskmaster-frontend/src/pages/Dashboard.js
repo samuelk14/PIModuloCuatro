@@ -13,7 +13,7 @@ const Dashboard = () => {
         const response = await axios.get('http://localhost:5000/api/tasks', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setTasks(response.data);
+        setTasks(response.data); // Establece las tareas en el estado
       } catch (error) {
         console.error('Error al cargar las tareas', error);
       }
