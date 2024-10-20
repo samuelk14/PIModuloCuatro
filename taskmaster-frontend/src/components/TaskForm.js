@@ -4,8 +4,10 @@ const TaskForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    dueDate: '',
     priority: 'media',
     status: 'pendiente',
+    invitedEmail: ''
   });
 
   const handleChange = (e) => {
@@ -34,11 +36,19 @@ const TaskForm = ({ onSubmit }) => {
         placeholder="Título"
         value={formData.title}
         onChange={handleChange}
+        required
       />
       <textarea
         name="description"
         placeholder="Descripción"
         value={formData.description}
+        onChange={handleChange}
+        required
+      />
+      <input
+        type="date"
+        name="dueDate"
+        value={formData.dueDate}
         onChange={handleChange}
       />
       <select name="priority" value={formData.priority} onChange={handleChange}>
@@ -51,7 +61,14 @@ const TaskForm = ({ onSubmit }) => {
         <option value="en progreso">En Progreso</option>
         <option value="completada">Completada</option>
       </select>
-      <button type="submit">Guardar Tarea</button>
+      <input
+        type="email"
+        name="invitedEmail"
+        placeholder="Correo del invitado"
+        value={formData.invitedEmail}
+        onChange={handleChange}
+      />
+      <button type="submit">Crear Tarea</button>
     </form>
   );
 };

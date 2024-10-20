@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,21 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Obtener parámetros de la URL
+  const queryParams = new URLSearchParams(location.search);
+  const taskId = queryParams.get('taskId'); // Tarea a la que fue invitado
+  const invitedEmail = queryParams.get('email');
+
+  // Prellenar el campo de email si se viene de una invitación
+  useEffect(() => {
+    if (invitedEmail) {
+      setFormData(prevFormData => ({ ...prevFormData, email: invitedEmail }));
+    }
+  }, [invitedEmail]);
 
   const handleChange = (e) => {
     setFormData({
@@ -20,9 +36,14 @@ const Register = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/auth/register', formData);
-      alert('Usuario registrado exitosamente');
-      console.log(response.data);
-      window.location.href = '/login';
+      if (taskId) {
+        // Si fue invitado, agregarlo a la tarea
+        await axios.post(`http://localhost:5000/api/tasks/${taskId}/add-user`, {
+          userId: response.data.userId, // ID del usuario recién creado
+        });
+      }
+      alert('Registro exitoso');
+      navigate('/login');
     } catch (error) {
       console.error('Error en el registro', error);
       alert(error.response.data.error);
@@ -33,10 +54,10 @@ const Register = () => {
     <div>
       <h2>Registro</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Nombre" value={formData.name} onChange={handleChange} />
-        <input type="email" name="email" placeholder="Correo" value={formData.email} onChange={handleChange} />
-        <input type="password" name="password" placeholder="Contraseña" value={formData.password} onChange={handleChange} />
-        <input type="password" name="confirmPassword" placeholder="Confirmar Contraseña" value={formData.confirmPassword} onChange={handleChange} />
+        <input type="text" name="name" placeholder="Nombre" value={formData.name} onChange={handleChange} required />
+        <input type="email" name="email" placeholder="Correo" value={formData.email} onChange={handleChange} required />
+        <input type="password" name="password" placeholder="Contraseña" value={formData.password} onChange={handleChange} required />
+        <input type="password" name="confirmPassword" placeholder="Confirmar Contraseña" value={formData.confirmPassword} onChange={handleChange} required />
         <button type="submit">Registrar</button>
       </form>
     </div>

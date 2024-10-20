@@ -42,6 +42,9 @@ const updateProfileSchema = Joi.object({
   email: Joi.string().email().optional().messages({
     "string.email": "El correo electrónico debe tener un formato válido",
   }),
+  currentPassword: Joi.string().required().messages({
+    'any.required': 'La contraseña actual es requerida'
+  }),
   newPassword: Joi.string().pattern(passwordPattern).optional().messages({
     "string.pattern.base":
       "La contraseña debe tener al menos 8 caracteres, e incluir al menos una letra, un número y un carácter especial",

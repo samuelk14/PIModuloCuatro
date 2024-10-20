@@ -45,7 +45,7 @@ router.put("/profile", verifyToken, async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
-
+   
     // Actualizar los campos del perfil según los datos enviados
     user.name = name || user.name;
     user.email = email || user.email;

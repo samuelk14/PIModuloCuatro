@@ -4,32 +4,53 @@ const Task = require('../models/Task');
 const User = require('../models/User');
 const router = express.Router();
 const { verifyToken } = require('../middleware/auth'); // Middleware para verificar el token
-
+const nodemailer = require('nodemailer'); // Para enviar correos
 
 // Crear tarea
 router.post('/', verifyToken, async (req, res) => {
-  const { title, description, dueDate, priority, invitedUsers } = req.body;
+  const { title, description, dueDate, priority, invitedEmail } = req.body;
   const ownerId = req.user.id; // Obtener el ID del usuario desde el token
 
   try {
+    // Crear la tarea
     const newTask = await Task.create({ title, description, dueDate, priority, ownerId });
-    // res.status(201).json(newTask);
+    
+    // Buscar si el correo del invitado ya está registrado
+    const invitedUser = await User.findOne({ where: { email: invitedEmail } });
 
-    // Si hay usuarios invitados, se asocian a la tarea
-    if (invitedUsers && invitedUsers.length > 0) {
-      const usersToInvite = await User.findAll({
-        where: {
-          id: invitedUsers // Buscar los usuarios por sus IDs
-        }
+    if (invitedUser) {
+      // Si el usuario ya está registrado, agregarlo directamente a la tarea
+      await newTask.addInvitedUsers([invitedUser.id]);
+      res.status(201).json(newTask);
+    } else {
+      // Si el usuario no está registrado, enviar una invitación por correo
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
       });
 
-      console.log('Usuarios a invitar:', usersToInvite);
+      const inviteLink = `http://localhost:3000/register?taskId=${newTask.id}&email=${invitedEmail}`;
 
-      // Se usa el método 'addInvitedUsers' que Sequelize genera automáticamente
-      await newTask.addInvitedUsers(usersToInvite);
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: invitedEmail,
+        subject: 'Invitación para unirse a una tarea',
+        text: `Has sido invitado a una tarea. Por favor, regístrate en este enlace: ${inviteLink}`,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error('Error al enviar el correo:', error);
+          return res.status(500).json({ error: 'Error al enviar la invitación por correo' });
+        } else {
+          console.log('Correo enviado:', info.response);
+          res.status(201).json(newTask);
+        }
+      });
     }
-
-    res.status(201).json(newTask);
     
   } catch (error) {
     console.error('Error al crear la tarea:', error);

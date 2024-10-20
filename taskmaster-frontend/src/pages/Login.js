@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -20,7 +23,7 @@ const Login = () => {
       const response = await axios.post('http://localhost:5000/api/auth/login', formData);
       localStorage.setItem('token', response.data.token);
       alert('Inicio de sesión exitoso');
-      // Redirigir al Dashboard después de iniciar sesión
+      navigate('/dashboard'); // Redirige al Dashboard después de iniciar sesión
     } catch (error) {
       console.error('Error en el inicio de sesión', error);
       alert(error.response.data.error);
