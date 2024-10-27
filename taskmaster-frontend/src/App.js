@@ -9,6 +9,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import Logout from './pages/Logout';
 import Header from './components/Header'; // Importar el componente Header
 import PrivateRoute from './components/PrivateRoute';
+import ResetPassword from './pages/ResetPassword';
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const HeaderWithRoutes = () => {
         <Route path="/edit-profile" element={<PrivateRoute><EditProfile /></PrivateRoute>} />
 
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/" element={<Login />} />
       </Routes>

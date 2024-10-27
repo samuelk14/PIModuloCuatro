@@ -95,7 +95,7 @@ router.post('/forgot-password', async (req, res) => {
       from: process.env.EMAIL_USER,
       subject: 'Recuperación de Contraseña',
       text: `Has solicitado una recuperación de contraseña. Haz clic en el siguiente enlace o pégalo en tu navegador para restablecer tu contraseña: \n\n
-        http://${req.headers.host}/api/auth/reset-password/${resetToken} \n\n
+        http://localhost:3000/reset-password/${resetToken} \n\n
         Si no solicitaste esta acción, ignora este correo.`,
     };
 
@@ -110,14 +110,8 @@ router.post('/forgot-password', async (req, res) => {
 });
 
 // Restablecer contraseña
-router.post('/reset-password/:token', async (req, res) => {
-  const { error } = resetPasswordSchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
-  }
-
-  const { token } = req.params;
-  const { password } = req.body;
+router.post('/reset-password', async (req, res) => {
+  const { token, password } = req.body;
 
   try {
     // Buscar al usuario por el token de recuperación
@@ -133,13 +127,13 @@ router.post('/reset-password/:token', async (req, res) => {
     }
 
     // Actualizar la contraseña del usuario
-    user.password = await bcrypt.hash(password, 10); // Asegúrate de usar bcrypt para encriptar
+    user.password = await bcrypt.hash(password, 10); // Hashea la nueva contraseña
     user.resetPasswordToken = null; // Limpiar el token de recuperación
     user.resetPasswordExpires = null; // Limpiar la expiración
 
     await user.save();
 
-    res.json({ message: 'Contraseña restablecida con éxito' });
+    res.status(200).json({ message: 'Contraseña restablecida exitosamente' });
   } catch (error) {
     console.error('Error al restablecer la contraseña:', error);
     res.status(500).json({ error: 'Error al restablecer la contraseña' });

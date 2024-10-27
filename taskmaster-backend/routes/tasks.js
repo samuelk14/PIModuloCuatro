@@ -2,6 +2,7 @@ const { Op } = require('sequelize'); // Importa Op desde Sequelize
 const express = require('express');
 const Task = require('../models/Task');
 const User = require('../models/User');
+//const TaskInvitations = require('../models'); ///////verificar esta ruta
 const router = express.Router();
 const { verifyToken } = require('../middleware/auth'); // Middleware para verificar el token
 const nodemailer = require('nodemailer'); // Para enviar correos
@@ -128,33 +129,42 @@ router.get('/', verifyToken, async (req, res) => {
 // Actualizar una tarea
 router.put('/:taskId', verifyToken, async (req, res) => {
   const { taskId } = req.params;
-  const { title, description, dueDate, priority, status, newInvitedUsers } = req.body;
-  const ownerId = req.user.id; // ID del usuario que realiza la solicitud
+  const { title, description, dueDate, priority, status, newInvitedUsers, comentarios } = req.body;
+  const userId = req.user.id; // ID del usuario que realiza la solicitud
 
   try {
-    // Verificar que la tarea exista y que el usuario sea el propietario
-    const task = await Task.findOne({ where: { id: taskId, ownerId: ownerId } });
+    // Verificar que la tarea exista y que el usuario sea el propietario o está invitado a la tarea
+    const task = await Task.findOne({ where: { id: taskId}, 
+      include: [
+        { model: User, 
+          as: 'invitedUsers', 
+          where: { id: userId }, 
+          required: false } // Usuarios invitados
+      ]
+    });
 
     if (!task) {
-      return res.status(404).json({ error: 'Tarea no encontrada o no tienes permisos para actualizarla' });
+      return res.status(404).json({ error: 'Tarea no encontrada'});
     }
 
-    // Actualizar la tarea con los nuevos datos
-    await task.update({ title, description, dueDate, priority, status });
-
-    // Si hay nuevos usuarios invitados, asociarlos a la tarea
+    // Permitir solo al propietario actualizar todos los campos
+    if (task.ownerId !== userId && !task.invitedUsers.some(user => user.id === userId)) {
+      return res.status(403).json({ error: 'No tienes permiso para actualizar esta tarea' });
+    }
+    
+    await task.update({ title, description, dueDate, priority, status, comentarios });
+    
     if (newInvitedUsers && newInvitedUsers.length > 0) {
       const usersToInvite = await User.findAll({
         where: {
-          id: newInvitedUsers // Buscamos los usuarios por sus IDs
-        }
+          id: newInvitedUsers,
+        },
       });
 
-      // Agregar nuevos usuarios invitados a la tarea
       await task.addInvitedUsers(usersToInvite);
       console.log('Nuevos invitados añadidos:', usersToInvite);
     }
-
+    
     res.json({ message: 'Tarea actualizada exitosamente', task });
   } catch (error) {
     console.error('Error al actualizar la tarea:', error);
