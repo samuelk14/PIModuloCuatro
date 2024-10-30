@@ -1,0 +1,22 @@
+.task-board-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .task-column {
+    flex: 1;
+    margin: 0 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .task-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
