@@ -152,23 +152,51 @@ router.put('/:taskId', verifyToken, async (req, res) => {
       return res.status(403).json({ error: 'No tienes permiso para actualizar esta tarea' });
     }
     
+    // Actualizar la tarea con los datos proporcionados
     await task.update({ title, description, dueDate, priority, status, comentarios });
     
+    // Procesar nuevos invitados si existen
     if (newInvitedUsers && newInvitedUsers.length > 0) {
-      const usersToInvite = await User.findAll({
-        where: {
-          id: newInvitedUsers,
-        },
-      });
+      for (const invitedEmail of newInvitedUsers) {
+        const invitedUser = await User.findOne({ where: { email: invitedEmail } });
 
-      await task.addInvitedUsers(usersToInvite);
-      console.log('Nuevos invitados añadidos:', usersToInvite);
+        if (invitedUser) {
+          // Si el usuario ya existe, se agrega directamente a la tarea
+          await task.addInvitedUsers([invitedUser.id]);
+        } else {
+          // Si no existe, enviar una invitación por correo
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS,
+            },
+          });
+
+          const inviteLink = `http://localhost:3000/register?taskId=${task.id}&email=${invitedEmail}`;
+
+          const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: invitedEmail,
+            subject: 'Invitación para unirse a una tarea',
+            text: `Has sido invitado a una tarea. Por favor, regístrate en este enlace: ${inviteLink}`,
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error al enviar el correo:', error);
+            } else {
+              console.log('Correo enviado:', info.response);
+            }
+          });
+        }
+      }
     }
     
     res.json({ message: 'Tarea actualizada exitosamente', task });
   } catch (error) {
     console.error('Error al actualizar la tarea:', error);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: 'Error al actualizar la tarea' });
   }
 });
 

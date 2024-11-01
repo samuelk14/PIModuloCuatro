@@ -38,6 +38,12 @@ const TaskBoard = ({ tasks, onTaskUpdate, onEditTask }) => {
                 onChange={(e) => handleTaskChange(task.id, 'comentarios', e.target.value)}
                 placeholder="Comentarios"
               />
+              <input
+                type="email"
+                value={editingTask[task.id].newInvitedEmail || ''}
+                onChange={(e) => handleTaskChange(task.id, 'newInvitedEmail', e.target.value)}
+                placeholder="Correo de nuevo invitado"
+              />
             </>
           ) : (
             <>
@@ -67,7 +73,13 @@ const TaskBoard = ({ tasks, onTaskUpdate, onEditTask }) => {
   const toggleEditTask = async (taskId, task) => {
     if (editingTask[taskId]) {
       // Guardar cambios
-      await onTaskUpdate(taskId, editingTask[taskId]);
+      const updatedTaskData = { ...editingTask[taskId] };
+      if (updatedTaskData.newInvitedEmail) {
+        updatedTaskData.newInvitedUsers = [updatedTaskData.newInvitedEmail];
+        delete updatedTaskData.newInvitedEmail;
+      }
+
+      await onTaskUpdate(taskId, updatedTaskData);
       setEditingTask((prev) => {
         const updated = { ...prev };
         delete updated[taskId];
@@ -92,7 +104,7 @@ const TaskBoard = ({ tasks, onTaskUpdate, onEditTask }) => {
     const newStatus = currentStatus === 'pendiente' ? 'en progreso' : currentStatus === 'en progreso' ? 'completada' : 'pendiente';
     try {
       await onTaskUpdate(taskId, { status: newStatus });
-      alert(`Estado de la tarea cambiado a "${newStatus}"`);
+      //alert(`Estado de la tarea cambiado a "${newStatus}"`);
     } catch (error) {
       console.error('Error al cambiar el estado de la tarea', error);
       alert('Error al cambiar el estado de la tarea');
