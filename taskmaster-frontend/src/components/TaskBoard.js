@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import './TaskBoard.css';
 
+// Función para formatear la fecha y ajustar el desfase horario
+const formatDate = (date) => {
+  const localDate = new Date(date);
+  localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
+  return localDate.toISOString().split('T')[0];
+};
+
 const TaskBoard = ({ tasks, onTaskUpdate, onEditTask }) => {
   const [editingTask, setEditingTask] = useState({}); // Estado para manejar la edición de tareas
 
@@ -22,7 +29,7 @@ const TaskBoard = ({ tasks, onTaskUpdate, onEditTask }) => {
               />
               <input
                 type="date"
-                value={editingTask[task.id].dueDate}
+                value={editingTask[task.id].dueDate || formatDate(task.dueDate)} // Prellenar el campo de fecha
                 onChange={(e) => handleTaskChange(task.id, 'dueDate', e.target.value)}
               />
               <select
@@ -92,7 +99,7 @@ const TaskBoard = ({ tasks, onTaskUpdate, onEditTask }) => {
         [taskId]: {
           title: task.title,
           description: task.description,
-          dueDate: task.dueDate,
+          dueDate: formatDate(task.dueDate),
           priority: task.priority,
           comentarios: task.comentarios || '',
         },
