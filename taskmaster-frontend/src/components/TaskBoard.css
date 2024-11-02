@@ -1,22 +1,44 @@
 .task-board-container {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .task-column {
-    flex: 1;
-    margin: 0 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-  
-  .task-item {
-    margin-bottom: 15px;
-    padding: 10px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Espacio entre las columnas */
+}
+
+.task-column {
+  flex: 1;
+  margin: 0 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.task-item {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Estilos para la prioridad */
+.priority-alta {
+  color: #ff3333;
+  font-weight: bold;
+}
+
+.priority-media {
+  color: #ffcc00;
+  font-weight: bold;
+}
+
+.priority-baja {
+  color: #33cc33;
+  font-weight: bold;
+}
+
+/* Estilos para resaltar tareas ancladas */
+.task-item.highlight {
+  border: 2px solid #007bff;
+  background-color: #e7f1ff;
+}
