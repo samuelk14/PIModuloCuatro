@@ -9,6 +9,7 @@ const Task = sequelize.define('Task', {
   priority: { type: DataTypes.ENUM('alta', 'media', 'baja'), defaultValue: 'media' },
   status: { type: DataTypes.ENUM('pendiente', 'en progreso', 'completada'), defaultValue: 'pendiente' },
   comentarios: { type: DataTypes.TEXT, allowNull: true },
+  isPinned: { type: DataTypes.BOOLEAN, defaultValue: false }
 });
 
 // Definir relaciones

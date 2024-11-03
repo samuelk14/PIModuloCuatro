@@ -129,7 +129,7 @@ router.get('/', verifyToken, async (req, res) => {
 // Actualizar una tarea
 router.put('/:taskId', verifyToken, async (req, res) => {
   const { taskId } = req.params;
-  const { title, description, dueDate, priority, status, newInvitedUsers, comentarios } = req.body;
+  const { title, description, dueDate, priority, status, newInvitedUsers, comentarios, isPinned } = req.body;
   const userId = req.user.id; // ID del usuario que realiza la solicitud
 
   try {
@@ -153,7 +153,7 @@ router.put('/:taskId', verifyToken, async (req, res) => {
     }
     
     // Actualizar la tarea con los datos proporcionados
-    await task.update({ title, description, dueDate, priority, status, comentarios });
+    await task.update({ title, description, dueDate, priority, status, comentarios, isPinned });
     
     // Procesar nuevos invitados si existen
     if (newInvitedUsers && newInvitedUsers.length > 0) {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './TaskBoard.css';
+import TaskModal from './TaskModal';
 
 // Función para formatear la fecha y ajustar el desfase horario
 const formatDate = (date) => {
@@ -11,10 +12,20 @@ const formatDate = (date) => {
 const TaskBoard = ({ tasks, onTaskUpdate }) => {
   const [editingTask, setEditingTask] = useState({});
   const [filters, setFilters] = useState({ sortBy: 'dueDate' });
+  const [selectedTask, setSelectedTask] = useState(null); // Estado para la tarea seleccionada
+
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
+  };
+
+  // Función para abrir el modal solo cuando se haga clic en el contenido de la tarea
+  const handleTaskClick = (e, task) => {
+    // Prevenir que el modal se abra si el clic proviene de un botón
+    if (e.target.tagName !== 'BUTTON') {
+      setSelectedTask(task);
+    }
   };
 
   const renderTasks = (status) => {
@@ -32,7 +43,7 @@ const TaskBoard = ({ tasks, onTaskUpdate }) => {
       });
 
     return filteredTasks.map((task) => (
-      <div key={task.id} className={`task-item ${task.isPinned ? 'highlight' : ''}`}>
+      <div key={task.id} className={`task-item ${task.isPinned ? 'highlight' : ''}`} onClick={(e) => handleTaskClick(e, task)}>
         {editingTask[task.id] ? (
           <>
             <input
@@ -62,6 +73,20 @@ const TaskBoard = ({ tasks, onTaskUpdate }) => {
               onChange={(e) => handleTaskChange(task.id, 'comentarios', e.target.value)}
               placeholder="Comentarios"
             />
+            <input
+              type="email"
+              value={editingTask[task.id].newInvitedEmail || ''}
+              onChange={(e) => handleTaskChange(task.id, 'newInvitedEmail', e.target.value)}
+              placeholder="Correo de nuevo invitado"
+            />
+            <label>
+              <input
+                type="checkbox"
+                checked={editingTask[task.id].isPinned || false}
+                onChange={(e) => handleTaskChange(task.id, 'isPinned', e.target.checked)}
+              />
+              Destacar tarea
+            </label>
           </>
         ) : (
           <>
@@ -77,11 +102,19 @@ const TaskBoard = ({ tasks, onTaskUpdate }) => {
         <button onClick={() => handleStatusChange(task.id, task.status)}>
           {status === 'pendiente' ? 'Iniciar' : status === 'en progreso' ? 'Completar' : 'Reabrir'}
         </button>
-        <button onClick={() => handlePinTask(task.id, !task.isPinned)}>
+        {/* <button onClick={() => handlePinTask(task.id, !task.isPinned)}>
           {task.isPinned ? 'Desanclar' : 'Anclar'}
-        </button>
+        </button> */}
       </div>
     ));
+  };
+
+  // const openTaskModal = (task) => {
+  //   setSelectedTask(task);
+  // };
+
+  const closeTaskModal = () => {
+    setSelectedTask(null);
   };
 
   const handleTaskChange = (taskId, field, value) => {
@@ -94,6 +127,11 @@ const TaskBoard = ({ tasks, onTaskUpdate }) => {
   const toggleEditTask = async (taskId, task) => {
     if (editingTask[taskId]) {
       const updatedTaskData = { ...editingTask[taskId] };
+      if (updatedTaskData.newInvitedEmail) {
+        updatedTaskData.newInvitedUsers = [updatedTaskData.newInvitedEmail];
+        delete updatedTaskData.newInvitedEmail;
+      }
+
       await onTaskUpdate(taskId, updatedTaskData);
       setEditingTask((prev) => {
         const updated = { ...prev };
@@ -109,6 +147,7 @@ const TaskBoard = ({ tasks, onTaskUpdate }) => {
           dueDate: formatDate(task.dueDate),
           priority: task.priority,
           comentarios: task.comentarios || '',
+          isPinned: task.isPinned || false,
         },
       }));
     }
@@ -124,17 +163,18 @@ const TaskBoard = ({ tasks, onTaskUpdate }) => {
     }
   };
 
-  const handlePinTask = async (taskId, isPinned) => {
-    try {
-      await onTaskUpdate(taskId, { isPinned });
-    } catch (error) {
-      console.error('Error al anclar la tarea', error);
-      alert('Error al anclar la tarea');
-    }
-  };
+  // const handlePinTask = async (taskId, isPinned) => {
+  //   try {
+  //     await onTaskUpdate(taskId, { isPinned });
+  //   } catch (error) {
+  //     console.error('Error al anclar la tarea', error);
+  //     alert('Error al anclar la tarea');
+  //   }
+  // };
 
   return (
     <div className="task-board-container">
+      <TaskModal task={selectedTask} isOpen={!!selectedTask} onClose={closeTaskModal} onEditTask={onTaskUpdate} />
       <div className="task-column">
         <h3>Pendientes</h3>
         <select name="sortBy" onChange={handleFilterChange} value={filters.sortBy}>
