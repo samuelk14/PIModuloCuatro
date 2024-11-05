@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './TaskForm.css';
 
 const TaskForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -31,13 +32,14 @@ const TaskForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="task-form-container" onSubmit={handleSubmit}>
       <input
         type="text"
         name="title"
         placeholder="Título"
         value={formData.title}
         onChange={handleChange}
+        className="task-form-input"
         required
       />
       <textarea
@@ -45,6 +47,7 @@ const TaskForm = ({ onSubmit }) => {
         placeholder="Descripción"
         value={formData.description}
         onChange={handleChange}
+        className="task-form-textarea"
         required
       />
       <input
@@ -52,13 +55,24 @@ const TaskForm = ({ onSubmit }) => {
         name="dueDate"
         value={formData.dueDate}
         onChange={handleChange}
+        className="task-form-input"
       />
-      <select name="priority" value={formData.priority} onChange={handleChange}>
+      <select
+        name="priority"
+        value={formData.priority}
+        onChange={handleChange}
+        className="task-form-select"
+      >
         <option value="alta">Alta</option>
         <option value="media">Media</option>
         <option value="baja">Baja</option>
       </select>
-      <select name="status" value={formData.status} onChange={handleChange}>
+      <select
+        name="status"
+        value={formData.status}
+        onChange={handleChange}
+        className="task-form-select"
+      >
         <option value="pendiente">Pendiente</option>
         <option value="en progreso">En Progreso</option>
         <option value="completada">Completada</option>
@@ -69,8 +83,9 @@ const TaskForm = ({ onSubmit }) => {
         placeholder="Correo del invitado"
         value={formData.invitedEmail}
         onChange={handleChange}
+        className="task-form-input"
       />
-      <button type="submit">Crear Tarea</button>
+      <button type="submit" className="task-form-button">Crear Tarea</button>
     </form>
   );
 };

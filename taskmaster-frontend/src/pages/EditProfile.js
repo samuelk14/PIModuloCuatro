@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './EditProfile.css';
 
 const EditProfile = () => {
   const [formData, setFormData] = useState({
@@ -52,16 +53,50 @@ const EditProfile = () => {
   };
 
   return (
-    <div>
-      <h2>Editar Perfil</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Nombre" value={formData.name} onChange={handleChange} />
-        <input type="email" name="email" placeholder="Correo" value={formData.email} onChange={handleChange} />
-        <input type="password" name="currentPassword" placeholder="Contraseña Actual" onChange={handleChange} />
-        <input type="password" name="newPassword" placeholder="Nueva Contraseña" onChange={handleChange} />
-        <input type="password" name="confirmPassword" placeholder="Confirmar Nueva Contraseña" onChange={handleChange} />
-        <button type="submit">Actualizar</button>
-      </form>
+    <div className="edit-profile-container">
+      <div className="edit-profile-form">
+        <h2 className="edit-profile-title">Editar Perfil</h2>
+        <form onSubmit={handleSubmit}>
+          <input 
+            type="text" 
+            name="name" 
+            placeholder="Nombre" 
+            value={formData.name} 
+            onChange={handleChange} 
+            className="edit-profile-input"
+          />
+          <input 
+            type="email" 
+            name="email" 
+            placeholder="Correo" 
+            value={formData.email} 
+            onChange={handleChange} 
+            className="edit-profile-input"
+          />
+          <input 
+            type="password" 
+            name="currentPassword" 
+            placeholder="Contraseña Actual" 
+            onChange={handleChange} 
+            className="edit-profile-input"
+          />
+          <input 
+            type="password" 
+            name="newPassword" 
+            placeholder="Nueva Contraseña" 
+            onChange={handleChange} 
+            className="edit-profile-input"
+          />
+          <input 
+            type="password" 
+            name="confirmPassword" 
+            placeholder="Confirmar Nueva Contraseña" 
+            onChange={handleChange} 
+            className="edit-profile-input"
+          />
+          <button type="submit" className="edit-profile-button">Actualizar</button>
+        </form>
+      </div>
     </div>
   );
 };

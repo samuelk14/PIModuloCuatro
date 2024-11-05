@@ -3,6 +3,7 @@ import axios from 'axios';
 import TaskBoard from '../components/TaskBoard';
 import TaskForm from '../components/TaskForm';
 import TaskModal from '../components/TaskModal';
+import './Dashboard.css';
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
@@ -97,17 +98,16 @@ const Dashboard = () => {
   console.log("Enviando handleTaskUpdate como onUpdateTask", handleTaskUpdate); // Confirmación de paso de función
 
   return (
-    <div>
+    <div className="dashboard-container">
       <TaskForm onSubmit={handleNewTask} />
       <TaskBoard tasks={tasks} onTaskClick={handleTaskClick} onTaskUpdate={handleTaskUpdate} onTaskDelete={handleTaskDelete} />
       {selectedTask && isModalOpen && (
-        console.log("handleTaskUpdate en Dashboard:", handleTaskUpdate),
         <TaskModal 
           task={selectedTask} 
           isOpen={isModalOpen} 
           onClose={closeModal} 
           onUpdateTask={handleTaskUpdate} 
-          // onDeleteTask={handleDeleteTask}
+          // onDeleteTask={handleTaskDelete}
         />
       )}
     </div>

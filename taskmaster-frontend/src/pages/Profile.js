@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './Profile.css';
 
 const Profile = () => {
   const [user, setUser] = useState({});
@@ -20,11 +21,18 @@ const Profile = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Perfil</h2>
-      <p><strong>Nombre:</strong> {user.name}</p>
-      <p><strong>Correo:</strong> {user.email}</p>
-      <button onClick={() => window.location.href = '/edit-profile'}>Editar Perfil</button>
+    <div className="profile-container">
+      <div className="profile-card">
+        <h2 className="profile-title">Perfil</h2>
+        <p className="profile-info"><strong>Nombre:</strong> {user.name}</p>
+        <p className="profile-info"><strong>Correo:</strong> {user.email}</p>
+        <button 
+          className="profile-button edit"
+          onClick={() => window.location.href = '/edit-profile'}
+        >
+          Editar Perfil
+        </button>
+      </div>
     </div>
   );
 };

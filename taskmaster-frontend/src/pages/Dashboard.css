@@ -1,0 +1,100 @@
+/* Contenedor principal del dashboard */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Estilos para TaskForm */
+  .task-form-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilos generales para TaskBoard */
+  .task-board {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .task-column {
+    flex: 1;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .task-column h3 {
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  /* Estilo para cada tarea en la lista */
+  .task-item {
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+    transition: box-shadow 0.3s;
+    cursor: pointer;
+  }
+  
+  .task-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Colores según prioridad de la tarea */
+  .priority-alta {
+    color: #ff4e50;
+    font-weight: bold;
+  }
+  
+  .priority-media {
+    color: #f9d423;
+    font-weight: bold;
+  }
+  
+  .priority-baja {
+    color: #27ae60;
+    font-weight: bold;
+  }
+  
+  /* Botón de eliminación */
+  .task-delete-button {
+    color: #e74c3c;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-left: auto;
+  }
+  
+  .task-delete-button:hover {
+    color: #c0392b;
+  }
+  
+  /* Botón de nueva tarea */
+  .add-task-button {
+    color: #ffffff;
+    background-color: #007bff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .add-task-button:hover {
+    background-color: #0056b3;
+  }
+  

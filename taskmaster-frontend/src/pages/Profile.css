@@ -1,0 +1,51 @@
+/* Fondo y alineación del contenedor de perfil */
+.profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f6f8;
+}
+
+/* Tarjeta de perfil */
+.profile-card {
+    background-color: #ffffff;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Título */
+.profile-title {
+    font-size: 1.8rem;
+    color: #333333;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+/* Información del usuario */
+.profile-info {
+    font-size: 1rem;
+    color: #555555;
+    margin: 0.5rem 0;
+}
+
+/* Botón de acción */
+.profile-button {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.profile-button:hover {
+    background-color: #0056b3;
+}

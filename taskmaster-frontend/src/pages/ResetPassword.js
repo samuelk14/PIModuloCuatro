@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import './ResetPassword.css';
 
 const ResetPassword = () => {
   const [formData, setFormData] = useState({
@@ -37,27 +38,31 @@ const ResetPassword = () => {
   };
 
   return (
-    <div>
-      <h2>Restablecer Contraseña</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="password"
-          name="password"
-          placeholder="Nueva Contraseña"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirmar Nueva Contraseña"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Restablecer Contraseña</button>
-      </form>
+    <div className="reset-password-container">
+      <div className="reset-password-form">
+        <h2 className="reset-password-title">Restablecer Contraseña</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="password"
+            name="password"
+            placeholder="Nueva Contraseña"
+            value={formData.password}
+            onChange={handleChange}
+            className="reset-password-input"
+            required
+          />
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirmar Nueva Contraseña"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="reset-password-input"
+            required
+          />
+          <button type="submit" className="reset-password-button">Restablecer Contraseña</button>
+        </form>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Header.css';
 
 const Header = () => {
   const handleLogout = () => {
@@ -8,17 +9,17 @@ const Header = () => {
   };
 
   return (
-    <header>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/dashboard">Dashboard</Link>
+    <header className="header">
+      <nav className="navbar">
+        <ul className="nav-list">
+          <li className="nav-item">
+            <Link to="/dashboard" className="nav-link">Dashboard</Link>
           </li>
-          <li>
-            <Link to="/profile">Perfil</Link>
+          <li className="nav-item">
+            <Link to="/profile" className="nav-link">Perfil</Link>
           </li>
-          <li>
-            <button onClick={handleLogout}>Cerrar Sesión</button>
+          <li className="nav-item">
+            <button onClick={handleLogout} className="nav-link logout-button">Cerrar Sesión</button>
           </li>
         </ul>
       </nav>

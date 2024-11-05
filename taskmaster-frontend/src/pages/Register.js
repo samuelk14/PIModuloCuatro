@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
+import "./Register.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -64,43 +65,49 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h2>Registro</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Correo"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Contraseña"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirmar Contraseña"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Registrar</button>
-      </form>
+    <div className="register-container">
+      <div className="register-form">
+        <h2 className="register-title">Registro</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Nombre"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="register-input"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Correo"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="register-input"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="register-input"
+          />
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirmar Contraseña"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+            className="register-input"
+          />
+          <button type="submit" className="register-button">Registrar</button>
+        </form>
+      </div>
     </div>
   );
 };

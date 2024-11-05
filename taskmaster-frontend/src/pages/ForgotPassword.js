@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './ForgotPassword.css';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -19,12 +20,21 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div>
-      <h2>Recuperar Contraseña</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="Correo" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <button type="submit">Recuperar</button>
-      </form>
+    <div className="forgot-password-container">
+      <div className="forgot-password-form">
+        <h2 className="forgot-password-title">Recuperar Contraseña</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Correo"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="forgot-password-input"
+          />
+          <button type="submit" className="forgot-password-button">Recuperar</button>
+        </form>
+      </div>
     </div>
   );
 };
