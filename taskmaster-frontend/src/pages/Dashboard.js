@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TaskBoard from '../components/TaskBoard';
 import TaskForm from '../components/TaskForm';
+import TaskModal from '../components/TaskModal';
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar la visibilidad del modal
+  const [selectedTask, setSelectedTask] = useState(null); // Estado para almacenar la tarea seleccionada
   const userId = parseInt(localStorage.getItem('userId'), 10); // ID del usuario actual
 
   useEffect(() => {
@@ -40,25 +43,73 @@ const Dashboard = () => {
   };
 
   const handleTaskUpdate = async (taskId, updatedFields) => {
+    console.log("handleTaskUpdate ejecutado con", taskId, updatedFields); // Verificar si se llama
     const token = localStorage.getItem('token');
     try {
       await axios.put(`http://localhost:5000/api/tasks/${taskId}`, updatedFields, {
         headers: { Authorization: `Bearer ${token}` },
       });
+  
+      // Actualizar los campos en el estado local
       setTasks(tasks.map(task => 
-        (task.id === taskId ? { ...task, ...updatedFields } : task // Actualiza los campos en el estado local
-      )));
-      //alert('Tarea actualizada exitosamente');
+        task.id === taskId ? { ...task, ...updatedFields } : task
+      ));
+
+      if (taskId === selectedTask?.id) {
+        setSelectedTask((prevTask) => ({ ...prevTask, ...updatedFields }));
+      }
+  
+      // Cerrar el modal si la actualización proviene del mismo
+      if (isModalOpen) closeModal();
+      // setIsModalOpen(false); // Cierra el modal
     } catch (error) {
       console.error('Error al actualizar la tarea', error);
       alert('Error al actualizar la tarea');
     }
   };
 
+  const handleTaskDelete = async (taskId) => {
+    const token = localStorage.getItem('token');
+    try {
+      await axios.delete(`http://localhost:5000/api/tasks/${taskId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setTasks(tasks.filter(task => task.id !== taskId));
+      closeModal();
+    } catch (error) {
+      console.error('Error al eliminar la tarea', error);
+      alert('Error al eliminar la tarea');
+    }
+  };
+ 
+  // Abre el modal con la tarea seleccionada
+  const handleTaskClick = (task) => {
+    setSelectedTask(task);  // Selecciona la tarea seleccionada
+    setIsModalOpen(true);    // Abre el modal
+  };  
+
+  // Cierra el modal y limpia la tarea seleccionada
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedTask(null);
+  };
+
+  console.log("Enviando handleTaskUpdate como onUpdateTask", handleTaskUpdate); // Confirmación de paso de función
+
   return (
     <div>
       <TaskForm onSubmit={handleNewTask} />
-      <TaskBoard tasks={tasks} onTaskUpdate={handleTaskUpdate} />
+      <TaskBoard tasks={tasks} onTaskClick={handleTaskClick} onTaskUpdate={handleTaskUpdate} onTaskDelete={handleTaskDelete} />
+      {selectedTask && isModalOpen && (
+        console.log("handleTaskUpdate en Dashboard:", handleTaskUpdate),
+        <TaskModal 
+          task={selectedTask} 
+          isOpen={isModalOpen} 
+          onClose={closeModal} 
+          onUpdateTask={handleTaskUpdate} 
+          // onDeleteTask={handleDeleteTask}
+        />
+      )}
     </div>
   );
 };

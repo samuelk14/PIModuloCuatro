@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import './Login.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const [error] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -30,23 +32,41 @@ const Login = () => {
     }
   };
 
-  // // Redirección a la página de recuperación de contraseña
-  // const handleForgotPassword = () => {
-  //   navigate('/forgot-password');
-  // };
-
+  
   return (
-    <div>
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="Correo" value={formData.email} onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Contraseña" value={formData.password} onChange={handleChange} required/>
-        <button type="submit">Iniciar Sesión</button>
+    <div className="login-container">
+      <form onSubmit={handleSubmit} className="login-form">
+        <h2 className="login-title">Iniciar Sesión</h2>
+        
+        <input
+          type="email"
+          name="email"
+          placeholder="Correo"
+          value={formData.email}
+          onChange={handleChange}
+          className="login-input"
+          required
+        />
+        
+        <input
+          type="password"
+          name="password"
+          placeholder="Contraseña"
+          value={formData.password}
+          onChange={handleChange}
+          className="login-input"
+          required
+        />
+
+        <button type="submit" className="login-button">Iniciar Sesión</button>
+
+        {error && <div className="alert alert-error">{error}</div>}
+        
+        <div className="login-footer">
+          <p>¿Olvidaste tu contraseña? <Link to="/forgot-password" className="login-link">Recupérala aquí</Link></p>
+          <p>¿No tienes cuenta? <Link to="/register" className="login-link">Regístrate aquí</Link></p>
+        </div>
       </form>
-      <div>
-        <p>¿Olvidaste tu contraseña? <Link to="/forgot-password">Recupérala aquí</Link></p>
-        <p>¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link></p>
-      </div>
     </div>
   );
 };
