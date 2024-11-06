@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import './ResetPassword.css';
@@ -10,6 +10,17 @@ const ResetPassword = () => {
   });
   const { token } = useParams(); // Obtener el token desde la URL
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Oculta el header en esta página
+    const header = document.querySelector('header');
+    if (header) header.style.display = 'none';
+    
+    // Restablece el header al salir
+    return () => {
+      if (header) header.style.display = 'block';
+    };
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
