@@ -1,56 +1,103 @@
 /* Contenedor principal del formulario */
 .task-form-container {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  /* Estilos generales para entradas de texto */
-  .task-form-input,
-  .task-form-textarea,
-  .task-form-select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.3s;
-  }
-  
-  .task-form-input:focus,
-  .task-form-textarea:focus,
-  .task-form-select:focus {
-    border-color: #007bff;
-  }
-  
-  /* Estilo del área de texto */
-  .task-form-textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
-  
-  /* Botón de enviar */
-  .task-form-button {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-    color: #ffffff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .task-form-button:hover {
-    background-color: #0056b3;
-  }
-  
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-sizing: border-box;
+}
+
+/* Estilos generales para entradas de texto */
+.task-form-input,
+.task-form-textarea,
+.task-form-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+}
+
+.task-form-input:focus,
+.task-form-textarea:focus,
+.task-form-select:focus {
+  border-color: #007bff;
+}
+
+/* Estilo del área de texto */
+.task-form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Botón de enviar */
+.task-form-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  color: #ffffff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.task-form-button:hover {
+  background-color: #0056b3;
+}
+
+/* Superposición del modal */
+.task-form-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Contenido del modal */
+.task-form-modal-content {
+  position: relative;
+  background-color: #ffffff;
+  padding: 20px;
+  padding-top: 40px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Botón de cierre del modal */
+.task-form-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.task-form-close-button:hover {
+  color: #007bff;
+}

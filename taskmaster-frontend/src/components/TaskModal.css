@@ -1,79 +1,159 @@
+/* Superposición del modal */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modal-content {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    position: relative;
-  }
-  
-  .modal-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-  }
-  
-  .modal-content label {
-    display: block;
-    font-weight: bold;
-    margin-top: 10px;
-  }
-  
-  .modal-content input,
-  .modal-content textarea,
-  .modal-content select {
-    width: 100%;
-    margin-top: 5px;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .save-button {
-    margin-top: 15px;
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .save-button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Prioridad */
-  .priority-alta {
-    color: #ff3333;
-    font-weight: bold;
-  }
-  
-  .priority-media {
-    color: #ffcc00;
-    font-weight: bold;
-  }
-  
-  .priority-baja {
-    color: #33cc33;
-    font-weight: bold;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow-y: auto; /* Permite el scroll general cuando el modal excede la pantalla */
+}
+
+/* Contenido del modal con scroll */
+.modal-content {
+  background-color: #ffffff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh; /* Limita la altura del modal al 90% de la altura de la pantalla */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow-y: auto; /* Agrega scroll al contenido del modal cuando es necesario */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Botón de cierre */
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s;
+}
+.modal-close:hover {
+  color: #007bff;
+}
+
+/* Título del modal */
+.modal-content h2 input {
+  width: 100%;
+  padding: 8px;
+  font-size: 1.2rem;
+  border: none;
+  border-bottom: 2px solid #ddd;
+  outline: none;
+  font-weight: bold;
+  transition: border-color 0.3s;
+}
+.modal-content h2 input:focus {
+  border-color: #007bff;
+}
+
+/* Etiquetas */
+.modal-content label {
+  display: block;
+  font-weight: 600;
+  color: #555;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+/* Entradas y selección */
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+}
+.modal-content input:focus,
+.modal-content textarea:focus,
+.modal-content select:focus {
+  border-color: #007bff;
+}
+
+/* Área de texto para comentarios */
+.modal-content textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Botón Anclar */
+.pin-button {
+  background-color: #28a745; /* Verde claro */
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+  width: 100%; /* Igual ancho que los otros botones */
+}
+
+.pin-button:hover {
+  background-color: #218838; /* Verde un poco más oscuro al hacer hover */
+}
+
+
+/* Botones de acción */
+.save-button,
+.delete-button {
+  margin-top: 15px;
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.save-button {
+  background-color: #007bff;
+  color: #fff;
+}
+.save-button:hover {
+  background-color: #0056b3;
+}
+.delete-button {
+  background-color: #e74c3c;
+  color: #fff;
+}
+.delete-button:hover {
+  background-color: #c0392b;
+}
+
+/* Opciones de prioridad */
+.priority-alta {
+  color: #ff3333;
+  font-weight: bold;
+}
+.priority-media {
+  color: #ffcc00;
+  font-weight: bold;
+}
+.priority-baja {
+  color: #33cc33;
+  font-weight: bold;
+}
+
+/* Espaciado y estilo del campo de correo de invitado */
+.modal-content input[type="email"] {
+  margin-top: 10px;
+}

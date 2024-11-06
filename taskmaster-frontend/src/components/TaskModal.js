@@ -1,45 +1,41 @@
 import React, { useState, useEffect } from "react";
 import "./TaskModal.css";
 
-
-
 const TaskModal = ({ task, isOpen, onClose, onUpdateTask, onDeleteTask }) => {
   const [editingTask, setEditingTask] = useState(task || {});
-  const [newInvitedEmail, setNewInvitedEmail] = useState(""); 
+  const [newInvitedEmail, setNewInvitedEmail] = useState("");
 
   useEffect(() => {
     setEditingTask(task || {}); // Actualiza `editingTask` cada vez que cambia `task`
     setNewInvitedEmail("");
   }, [task, onUpdateTask]);
 
- 
   if (!isOpen || !task) return null;
 
   const handleInputChange = (field, value) => {
     setEditingTask((prev) => ({ ...prev, [field]: value }));
   };
 
-  
   const handleSave = () => {
     const updatedTask = { ...editingTask };
     if (newInvitedEmail) {
       updatedTask.newInvitedUsers = [newInvitedEmail];
     }
 
-    onUpdateTask(task.id, updatedTask); 
+    onUpdateTask(task.id, updatedTask);
     setNewInvitedEmail(""); // Limpia el campo de nuevo invitado después de guardar
     onClose();
   };
 
   const handleDelete = () => {
-    if (onDeleteTask && typeof onDeleteTask === 'function') {
+    if (onDeleteTask && typeof onDeleteTask === "function") {
       onDeleteTask(task.id); // Llamar a la función de eliminación
       onClose(); // Cerrar el modal
     } else {
       console.error("'onDeleteTask' no está definido o no es una función.");
     }
   };
-  
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -68,7 +64,7 @@ const TaskModal = ({ task, isOpen, onClose, onUpdateTask, onDeleteTask }) => {
           <label>Fecha Límite:</label>
           <input
             type="date"
-            value={editingTask.dueDate ? editingTask.dueDate.split('T')[0] : ''}
+            value={editingTask.dueDate ? editingTask.dueDate.split("T")[0] : ""}
             onChange={(e) => handleInputChange("dueDate", e.target.value)}
           />
         </div>
@@ -108,7 +104,10 @@ const TaskModal = ({ task, isOpen, onClose, onUpdateTask, onDeleteTask }) => {
           <strong>Estado:</strong> {task.status}
         </p>
 
-        <button onClick={() => onUpdateTask(task.id, { isPinned: !task.isPinned })}>
+        <button
+          onClick={() => onUpdateTask(task.id, { isPinned: !task.isPinned })}
+          className="pin-button"
+        >
           {task.isPinned ? "Desanclar" : "Anclar"}
         </button>
 
@@ -125,4 +124,3 @@ const TaskModal = ({ task, isOpen, onClose, onUpdateTask, onDeleteTask }) => {
 };
 
 export default TaskModal;
-

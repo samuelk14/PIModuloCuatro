@@ -9,6 +9,8 @@ const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar la visibilidad del modal
   const [selectedTask, setSelectedTask] = useState(null); // Estado para almacenar la tarea seleccionada
+  const [isTaskFormOpen, setIsTaskFormOpen] = useState(false); // Estado para controlar el modal del formulario de tarea
+
   const userId = parseInt(localStorage.getItem('userId'), 10); // ID del usuario actual
 
   useEffect(() => {
@@ -38,6 +40,7 @@ const Dashboard = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTasks([...tasks, { ...response.data, isOwner: true }]); // Agrega la nueva tarea a la lista
+      setIsTaskFormOpen(false); // Cierra el formulario modal
     } catch (error) {
       console.error('Error al crear la tarea', error);
     }
@@ -99,19 +102,41 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <TaskForm onSubmit={handleNewTask} />
-      <TaskBoard tasks={tasks} onTaskClick={handleTaskClick} onTaskUpdate={handleTaskUpdate} onTaskDelete={handleTaskDelete} />
+      <TaskBoard 
+        tasks={tasks} 
+        onTaskClick={handleTaskClick} 
+        onTaskUpdate={handleTaskUpdate} 
+        onTaskDelete={handleTaskDelete} 
+      />
+      
       {selectedTask && isModalOpen && (
         <TaskModal 
           task={selectedTask} 
           isOpen={isModalOpen} 
           onClose={closeModal} 
           onUpdateTask={handleTaskUpdate} 
-          // onDeleteTask={handleTaskDelete}
+          onDeleteTask={handleTaskDelete}
         />
       )}
+      
+      {isTaskFormOpen && (
+        <div className="task-form-modal">
+          <TaskForm 
+            onSubmit={handleNewTask} 
+            onClose={() => setIsTaskFormOpen(false)} 
+          />
+        </div>
+      )}
+      
+      <button 
+        className="floating-add-button" 
+        onClick={() => setIsTaskFormOpen(true)}
+      >
+        +
+      </button>
     </div>
   );
+  
 };
 
 export default Dashboard;
